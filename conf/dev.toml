@@ -1,0 +1,3 @@
+[config]
+tcp_serve_port = 9595
+http_serve_port = 9596

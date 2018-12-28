@@ -1,0 +1,6 @@
+syntax="proto3";
+package auth;
+
+message Login {
+    string MAC = 1;
+}
