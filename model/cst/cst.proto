@@ -1,5 +1,4 @@
 syntax="proto3";
-package cst;
 
 enum MsgType {
     Login = 0;
