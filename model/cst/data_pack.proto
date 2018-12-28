@@ -1,0 +1,13 @@
+syntax="proto3";
+package cst;
+
+enum MsgType {
+    Login = 0;
+    Room = 1;
+    Combat = 2;
+}
+
+enum MsgCmd {
+    Login_LoginReq = 0;
+    Login_LoginResp = 1;
+}
