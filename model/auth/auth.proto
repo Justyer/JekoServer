@@ -1,5 +1,10 @@
 syntax="proto3";
 
-message Login {
+message LoginReq {
     string MAC = 1;
+}
+
+message LoginResp {
+    int32 Code = 1;
+    string UserName = 2;
 }

@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	"log"
 	"net"
+	"strconv"
 
 	"github.com/golang/protobuf/proto"
 
@@ -76,10 +78,10 @@ func JustDoIt(conn net.Conn) {
 				// 大分类
 				big_cate := bytes.NewBuffer(datapack[0:2])
 				// 小分类
-				sml_cate := bytes.NewBuffer(datapack[4:6])
+				sml_cate := bytes.NewBuffer(datapack[2:4])
 
 				// 数据
-				data := datapack[6 : dl+8]
+				data := datapack[8 : dl+8]
 
 				var big_cate_short uint16
 				binary.Write(big_cate, binary.BigEndian, &big_cate_short)
@@ -87,11 +89,31 @@ func JustDoIt(conn net.Conn) {
 				var sml_cate_short uint16
 				binary.Write(sml_cate, binary.BigEndian, &sml_cate_short)
 
-				var req auth.Login
+				var req auth.LoginReq
 				proto.Unmarshal(data, &req)
 
 				fmt.Println("recv:", big_cate_short, sml_cate_short, req)
 
+				var resp auth.LoginResp
+				resp.Code = 0
+				resp.UserName = "zxy"
+				respByte, err := proto.Marshal(&resp)
+				if err != nil {
+					log.Println(err)
+				}
+				resp_len := len(respByte)
+				len_byte := []byte(strconv.Itoa(resp_len))
+
+				resp_final_byte := datapack[:8]
+
+				for i := 0; i < len(len_byte); i++ {
+					resp_final_byte = append(resp_final_byte, len_byte[i])
+				}
+				for i := 0; i < len(respByte); i++ {
+					resp_final_byte = append(resp_final_byte, respByte[i])
+				}
+
+				conn.Write(resp_final_byte)
 			}
 		}
 
