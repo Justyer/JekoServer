@@ -18,7 +18,7 @@ var (
 )
 
 var (
-	LinkConn []net.Conn
+	LinkConns []net.Conn
 )
 
 var (
