@@ -142,8 +142,8 @@ func Cate1(dp DataPack, conn net.Conn) {
 
 	var resp_final_byte []byte
 
-	resp_final_byte = bytes.Extend(resp_final_byte, dp.MsgType)
-	resp_final_byte = bytes.Extend(resp_final_byte, dp.MsgCmd)
+	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(uint16(0)))
+	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(uint16(1)))
 	resp_final_byte = bytes.Extend(resp_final_byte, len_byte)
 	resp_final_byte = bytes.Extend(resp_final_byte, respByte)
 
@@ -151,5 +151,5 @@ func Cate1(dp DataPack, conn net.Conn) {
 	if err != nil {
 		log.Err("write err:", err)
 	}
-	log.Tx("resp_final_byte: %v", resp_final_byte)
+	log.Succ("[resp_final_byte]: %v\n", resp_final_byte)
 }

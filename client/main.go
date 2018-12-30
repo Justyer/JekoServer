@@ -27,12 +27,12 @@ func main() {
 	len_byte := Uint322Byte(uint32(data_len))
 
 	cate1_byte := []byte{
-		byte(uint16(1)),
-		byte(uint16(1) >> 8),
+		byte(uint16(0)),
+		byte(uint16(0) >> 8),
 	}
 	cate2_byte := []byte{
-		byte(uint16(2)),
-		byte(uint16(2) >> 8),
+		byte(uint16(0)),
+		byte(uint16(0) >> 8),
 	}
 
 	final_byte := BytesCombine(cate1_byte, cate2_byte, len_byte, data_byte)
