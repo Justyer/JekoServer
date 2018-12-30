@@ -29,3 +29,7 @@ func (self *Message) Read(bs int) error {
 
 	return nil
 }
+
+func (self *Message) HeadCut(l int) {
+	self.BufPool = self.BufPool[l:]
+}

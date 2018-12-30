@@ -66,6 +66,7 @@ func GoLink(conn net.Conn) {
 			}
 			log.Succ("[resp_final_byte]: %v\n", resp_final_byte)
 		}
+		msg.HeadCut(int(dp.DataLen) + 8)
 
 	}
 }
