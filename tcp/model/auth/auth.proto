@@ -1,0 +1,14 @@
+syntax="proto3";
+
+message LoginReq {
+    int32 Type = 1;
+    string MAC = 2;
+    string UserName = 3;
+    string PassWord = 4;
+}
+
+message LoginResp {
+    int32 Code = 1;
+    int32 UserID = 2;
+    string UserName = 3;
+}

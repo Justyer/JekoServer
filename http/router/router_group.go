@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/Justyer/JekoServer/router/ver"
+	"github.com/Justyer/JekoServer/http/router/ver"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,9 +1,9 @@
 package serve
 
 import (
-	"github.com/Justyer/JekoServer/model"
-	"github.com/Justyer/JekoServer/serve/http"
-	"github.com/Justyer/JekoServer/serve/tcp"
+	"github.com/Justyer/JekoServer/http"
+	"github.com/Justyer/JekoServer/tcp"
+	"github.com/Justyer/JekoServer/tcp/model"
 )
 
 func Run() {

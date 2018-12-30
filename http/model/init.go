@@ -3,7 +3,7 @@ package model
 import (
 	"net"
 
-	"github.com/Justyer/JekoServer/model/user"
+	"github.com/Justyer/JekoServer/http/model/user"
 )
 
 var (

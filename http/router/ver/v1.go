@@ -1,7 +1,7 @@
 package ver
 
 import (
-	"github.com/Justyer/JekoServer/controller/v1/user"
+	"github.com/Justyer/JekoServer/http/controller/v1/user"
 	"github.com/gin-gonic/gin"
 )
 

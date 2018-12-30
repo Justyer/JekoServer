@@ -5,8 +5,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Justyer/JekoServer/model"
-	"github.com/Justyer/JekoServer/router"
+	"github.com/Justyer/JekoServer/http/model"
+	"github.com/Justyer/JekoServer/http/router"
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 )

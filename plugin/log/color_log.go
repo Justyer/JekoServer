@@ -7,6 +7,11 @@ func Info(s string, a ...interface{}) {
 	grey(s+"\n", a...)
 }
 
+func Warn(s string, a ...interface{}) {
+	yellow := color.New(color.FgYellow).PrintfFunc()
+	yellow(s+"\n", a...)
+}
+
 func Succ(s string, a ...interface{}) {
 	cyan := color.New(color.FgGreen).PrintfFunc()
 	cyan(s+"\n", a...)

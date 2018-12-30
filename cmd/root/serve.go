@@ -4,9 +4,8 @@ import (
 	"log"
 
 	"github.com/Justyer/JekoServer/cmd/load_model"
-
 	"github.com/Justyer/JekoServer/cmd/serve"
-	"github.com/Justyer/JekoServer/model"
+	"github.com/Justyer/JekoServer/tcp/model"
 	"github.com/spf13/cobra"
 )
 

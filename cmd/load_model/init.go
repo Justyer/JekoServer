@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Justyer/JekoServer/model"
+	"github.com/Justyer/JekoServer/tcp/model"
 	"github.com/Justyer/lingo/util"
 	"github.com/spf13/viper"
 )

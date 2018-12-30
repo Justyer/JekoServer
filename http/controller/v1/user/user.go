@@ -4,9 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Justyer/JekoServer/model"
-
-	"github.com/Justyer/JekoServer/model/user"
+	"github.com/Justyer/JekoServer/http/model"
+	"github.com/Justyer/JekoServer/http/model/user"
 	"github.com/gin-gonic/gin"
 )
 

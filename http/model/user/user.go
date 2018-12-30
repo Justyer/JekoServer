@@ -1,6 +1,6 @@
 package user
 
-import "github.com/Justyer/JekoServer/model/weapon"
+import "github.com/Justyer/JekoServer/http/model/weapon"
 
 type User struct {
 	ID       int           `json:"id"`
