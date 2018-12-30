@@ -9,9 +9,8 @@ import (
 	"net"
 	"unsafe"
 
+	"github.com/Justyer/JekoServer/tcp/model/auth"
 	"github.com/golang/protobuf/proto"
-
-	"github.com/Justyer/JekoServer/model/auth"
 )
 
 func main() {
@@ -36,7 +35,15 @@ func main() {
 	}
 
 	final_byte := BytesCombine(cate1_byte, cate2_byte, len_byte, data_byte)
+	// final_byte := BytesCombine(cate1_byte, cate2_byte)
 	conn.Write(final_byte)
+	// for {
+	// 	var x int
+	// 	fmt.Scanf("%d", &x)
+	// 	if x == 1 {
+	// 		conn.Write(final_byte)
+	// 	}
+	// }
 
 	//读取到buffer
 	buf := make([]byte, 20)
