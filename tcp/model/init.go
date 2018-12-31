@@ -3,7 +3,13 @@ package model
 import (
 	"net"
 
+	"github.com/jinzhu/gorm"
+
 	"github.com/Justyer/JekoServer/http/model/user"
+)
+
+var (
+	JekoDB *gorm.DB
 )
 
 var (

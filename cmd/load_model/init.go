@@ -1,6 +1,7 @@
 package load_model
 
 import (
+	mysql "Groot/src/golibs/db/mysql/gorm"
 	"fmt"
 	"log"
 
@@ -11,6 +12,7 @@ import (
 
 func InitGlobalConfig() {
 	initIP()
+	initDB()
 }
 
 func initIP() {
@@ -20,4 +22,15 @@ func initIP() {
 	}
 	model.TCPIPort = fmt.Sprintf("%s:%d", IP, viper.GetInt("config.tcp_serve_port"))
 	model.HTTPIPort = fmt.Sprintf("%s:%d", IP, viper.GetInt("config.http_serve_port"))
+}
+
+func initDB() {
+	model.JekoDB = mysql.Conn(mysql.DBInfo{
+		User:   viper.GetString("mysql.user"),
+		Pass:   viper.GetString("mysql.pass"),
+		Host:   viper.GetString("mysql.host"),
+		Port:   viper.GetInt("mysql.port"),
+		DbName: viper.GetString("mysql.db"),
+	})
+	model.JekoDB.LogMode(true)
 }

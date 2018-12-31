@@ -19,8 +19,7 @@ func (self *LoginServe) MacLogin(mac string) (user.User, error) {
 }
 
 func (self *LoginServe) UserLogin(u, p string) (user.User, error) {
-	var user user.User
-	user.UserID = 9527
-	user.UserName = u
-	return user, nil
+	dao := user.NewUserDao()
+	user, err := dao.QueryUser(u, p)
+	return user, err
 }

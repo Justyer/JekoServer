@@ -1,3 +1,10 @@
 [config]
 tcp_serve_port = 9595
 http_serve_port = 9596
+
+[mysql]
+user = "root"
+pass = "495495"
+host = "localhost"
+port = 3306
+db = "db_jeko"
