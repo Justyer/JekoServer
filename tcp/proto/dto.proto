@@ -7,6 +7,6 @@ message RoomInfo {
 }
 
 message UserInfo {
-	int32 UserName = 1;
+	string UserName = 1;
   string IconURL = 2;
 }
