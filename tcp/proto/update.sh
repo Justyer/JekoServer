@@ -1,4 +1,4 @@
-protoc --go_out=../model/auth/ auth.proto
-protoc --go_out=../model/cst/ cst.proto
-protoc --go_out=../model/room/ room.proto
-protoc --go_out=../model/dto/ dto.proto
+protoc --go_out=../model/prt/ auth.proto
+protoc --go_out=../model/prt/ cst.proto
+protoc --go_out=../model/prt/ room.proto
+protoc --go_out=../model/prt/ dto.proto
