@@ -1,12 +1,12 @@
 syntax="proto3";
 package dto;
 
-message RoomInfo {
+message RoomInfoDTO {
 	int32 ID = 1;
-  repeated UserInfo UserList = 2;
+  repeated UserInfoDTO UserList = 2;
 }
 
-message UserInfo {
+message UserInfoDTO {
 	string UserName = 1;
   string IconURL = 2;
 }

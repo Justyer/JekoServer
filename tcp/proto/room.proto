@@ -8,7 +8,7 @@ message QueryRoomListReq {
 
 message QueryRoomListResp {
   	int32 Code = 1;
-  	repeated dto.RoomInfo RoomList = 2;
+  	repeated dto.RoomInfoDTO RoomList = 2;
 }	
 
 message EnterRoomReq {
@@ -17,7 +17,7 @@ message EnterRoomReq {
 
 message EnterRoomResp {
 	int32 Code = 1;
-    dto.RoomInfo Room = 2;
+    dto.RoomInfoDTO Room = 2;
 
 }
 
