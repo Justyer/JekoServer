@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        * {
+            height: 100%;
+            width: 100%;
+
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top right, rgb(0, 255, 177), cyan);
+        }
+
+        #canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius:25px;
+            width: 960px;
+            height: 540px;
+            background: linear-gradient(to top right, grey, pink);
+        }
+    </style>
+    <title>canvas</title>
+</head>
+
+<body>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script> 
+        document.write('<script type="text/javascript" src="/static/canvas.js?v=' + Math.random() + '"><\/script>'); 
+    </script>
+</body>
+
+</html>

@@ -21,7 +21,7 @@ func TCPServe() {
 		log.Err("[Error listening]: %s", err.Error())
 		return
 	}
-	log.Info("[listener]: (%s)\n", model.TCPIPort)
+	log.Info("[listener]: (%s)", model.TCPIPort)
 
 	for {
 		conn, err := listener.Accept()
@@ -60,11 +60,8 @@ func GoLink(conn net.Conn) {
 			dp.Parse()
 			r := router.NewMzRouter()
 			r.DataPack = dp
-			resp_final_byte := r.MsgType()
-			if _, err := msg.Conn.Write(resp_final_byte); err != nil {
-				log.Err("[write err]:", err)
-			}
-			log.Succ("[resp_final_byte]: %v\n", resp_final_byte)
+			r.Conn = msg.Conn
+			r.MsgType()
 		}
 		msg.HeadCut(int(dp.DataLen) + 8)
 

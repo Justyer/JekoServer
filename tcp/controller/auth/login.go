@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"net"
+
 	"github.com/Justyer/JekoServer/plugin/log"
 	ptl "github.com/Justyer/JekoServer/plugin/protocol"
 	"github.com/Justyer/JekoServer/tcp/model/auth"
@@ -18,13 +20,14 @@ const (
 
 type LoginController struct {
 	DataPack *ptl.DataPack_2_2_4
+	Conn     net.Conn
 }
 
 func NewLoginController() *LoginController {
 	return &LoginController{}
 }
 
-func (self *LoginController) Login() []byte {
+func (self *LoginController) Login() {
 	var req auth.LoginReq
 	proto.Unmarshal(self.DataPack.Data, &req)
 
@@ -50,6 +53,8 @@ func (self *LoginController) Login() []byte {
 	if err != nil {
 		log.Err(err.Error())
 	}
+	log.Tx("[req_data]: %s", req.String())
+	log.Tx("[resp_data]: %s", resp.String())
 	len_byte := bytes.ToByteForLE(int32(len(respByte)))
 
 	var resp_final_byte []byte
@@ -59,5 +64,8 @@ func (self *LoginController) Login() []byte {
 	resp_final_byte = bytes.Extend(resp_final_byte, len_byte)
 	resp_final_byte = bytes.Extend(resp_final_byte, respByte)
 
-	return resp_final_byte
+	if _, err := self.Conn.Write(resp_final_byte); err != nil {
+		log.Err("[write err]:", err)
+	}
+	log.Succ("[resp_final_byte]: %v", resp_final_byte)
 }
