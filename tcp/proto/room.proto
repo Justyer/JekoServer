@@ -1,4 +1,5 @@
 syntax="proto3";
+package prt;
 import "dto.proto";
 
 message QueryRoomListReq {
@@ -8,7 +9,7 @@ message QueryRoomListReq {
 
 message QueryRoomListResp {
   	int32 Code = 1;
-  	repeated dto.RoomInfoDTO RoomList = 2;
+  	repeated RoomInfoDTO RoomList = 2;
 }	
 
 message EnterRoomReq {
@@ -17,7 +18,7 @@ message EnterRoomReq {
 
 message EnterRoomResp {
 	int32 Code = 1;
-    dto.RoomInfoDTO Room = 2;
+    RoomInfoDTO Room = 2;
 
 }
 

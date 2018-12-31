@@ -1,5 +1,5 @@
 syntax="proto3";
-package dto;
+package prt;
 
 message RoomInfoDTO {
 	int32 ID = 1;
