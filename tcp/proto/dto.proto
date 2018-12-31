@@ -1,0 +1,12 @@
+syntax="proto3";
+package dto;
+
+message RoomInfo {
+	int32 ID = 1;
+  repeated UserInfo PlayerList = 2;
+}
+
+message UserInfo {
+	int32 UserName = 1;
+  string IconURL = 2;
+}

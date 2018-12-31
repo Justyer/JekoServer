@@ -3,7 +3,8 @@ syntax="proto3";
 enum MsgType {
     Login = 0;
     Room = 1;
-    Combat = 2;
+    Ready = 2;
+    Combat = 3;
 }
 
 enum MsgCmd {
@@ -17,11 +18,20 @@ enum MsgCmd {
     // 进入房间
     Room_GetInReq = 4;
     Room_GetInResp = 5;
-    // 房间开始游戏
-    Room_StartGameReq = 6;
-    Room_StartGameResp = 7;
+
+    // 进入准备场景
+    Room_EnterReadyReq = 6;
+    Room_EnterReadyResp = 7;
+
+    // 升级
+    Ready_UpgradeReq = 8;
+    Ready_UpgradeResp = 9;
+
+    // 开始游戏
+    Ready_StartGameReq = 10;
+    Ready_StartGameResp = 11;
 
     // 攻击
-    Combat_AttackReq = 8;
-    Combat_AttackResp = 9;
+    Combat_AttackReq = 12;
+    Combat_AttackResp = 13;
 }
