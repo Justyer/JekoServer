@@ -3,7 +3,7 @@ package dto;
 
 message RoomInfo {
 	int32 ID = 1;
-  repeated UserInfo PlayerList = 2;
+  repeated UserInfo UserList = 2;
 }
 
 message UserInfo {
