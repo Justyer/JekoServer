@@ -3,24 +3,27 @@ package prt;
 
 message RoomInfoDTO {
 	int32 ID = 1;
-  repeated UserInfoDTO UserList = 2;
+  	repeated UserInfoDTO UserList = 2;
 }
 
 message UserInfoDTO {
 	string UserName = 1;
-  string IconURL = 2;
+ 	string IconURL = 2;
 }
 
 message PlayerDTO {
-
+	int32 UserID = 1;
+	WeaponDTO Weapon = 2;
 }
 
 message WeaponDTO {
-  int32 ID = 1;
-  int32 SN = 2;
-  repeated 
+  	int32 ID = 1;
+  	int32 SN = 2;
+  	repeated WeaponExtraAttrDTO WeaponList = 3;
 }
 
 message WeaponExtraAttrDTO {
-
+	int32 attrType = 1;//0-attack 1-attackSpeed 2-crit
+	int32 value = 2;
+	
 }

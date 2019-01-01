@@ -12,11 +12,11 @@ message QueryRoomListResp {
   	repeated RoomInfoDTO RoomList = 2;
 }	
 
-message GetInReq {
+message GetInRoomReq {
     int32 ID = 1;
 }
 
-message GetInResp {
+message GetInRoomResp {
 	int32 Code = 1;
     RoomInfoDTO Room = 2;
 
@@ -27,7 +27,6 @@ message EnterReadyReq {
 
 message EnterReadyResp {
     int32 Code = 1;
-    int32 UserID = 2;
-    string UserName = 3;
+    repeated PlayerDTO PlayerList = 2;
 }
 
