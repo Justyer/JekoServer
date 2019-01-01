@@ -10,3 +10,17 @@ message UserInfoDTO {
 	string UserName = 1;
   string IconURL = 2;
 }
+
+message PlayerDTO {
+
+}
+
+message WeaponDTO {
+  int32 ID = 1;
+  int32 SN = 2;
+  repeated 
+}
+
+message WeaponExtraAttrDTO {
+
+}
