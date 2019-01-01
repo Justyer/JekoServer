@@ -5,11 +5,14 @@ import (
 	"net"
 	"os"
 
+	"github.com/Justyer/JekoServer/tcp/router"
+
 	"github.com/Justyer/JekoServer/plugin/log"
 	ptl "github.com/Justyer/JekoServer/plugin/protocol"
 	"github.com/Justyer/JekoServer/tcp/model"
 	msg "github.com/Justyer/JekoServer/tcp/model/message"
-	"github.com/Justyer/JekoServer/tcp/router"
+	"github.com/Justyer/JekoServer/tcp/model/tool"
+	"github.com/Justyer/JekoServer/tcp/model/user"
 )
 
 // 开始一个TCP服务
@@ -43,6 +46,9 @@ func GoLink(conn net.Conn) {
 	msg := msg.NewMsg()
 	msg.Conn = conn
 
+	var c tool.Cache
+	c.User = &user.User{}
+
 	for {
 		if err := msg.Read(50); err != nil {
 			if err == io.EOF {
@@ -58,9 +64,10 @@ func GoLink(conn net.Conn) {
 
 		if ptl.DP_2_2_4_IsWhole(msg.BufPool) {
 			dp.Parse()
-			r := router.NewMzRouter()
+			r := router.NewJekoRouter()
 			r.DataPack = dp
 			r.Conn = msg.Conn
+			r.Cache = &c
 			r.MsgType()
 		}
 		msg.HeadCut(int(dp.DataLen) + 8)

@@ -3,37 +3,67 @@ package router
 import (
 	"net"
 
+	"github.com/Justyer/JekoServer/tcp/controller/room"
+	"github.com/Justyer/JekoServer/tcp/model/prt"
+	"github.com/Justyer/JekoServer/tcp/model/tool"
+
+	"github.com/Justyer/JekoServer/plugin/log"
 	ptl "github.com/Justyer/JekoServer/plugin/protocol"
 	"github.com/Justyer/JekoServer/tcp/controller/auth"
-	"github.com/Justyer/JekoServer/tcp/model/cst"
 )
 
-type MzRouter struct {
+type JekoRouter struct {
 	DataPack *ptl.DataPack_2_2_4
 	Conn     net.Conn
+	Cache    *tool.Cache
 }
 
-func NewMzRouter() *MzRouter {
-	return &MzRouter{}
+func NewJekoRouter() *JekoRouter {
+	return &JekoRouter{}
 }
 
-func (self *MzRouter) MsgType() {
+// 一级命令
+func (self *JekoRouter) MsgType() {
 	switch int32(self.DataPack.MsgType) {
-	case cst.MsgType_value["Login"]:
+	case prt.MsgType_value["Login"]:
 		self.MsgCmd_Login()
-		// case cst.MsgType_value["Room"]:
-		// 	RoomCmd(dp)
-		// case cst.MsgType_value["Combat"]:
-		// 	ComBatCmd(dp)
+	case prt.MsgType_value["Room"]:
+		self.MsgCmd_Room()
+	// case cst.MsgType_value["Combat"]:
+	// 	ComBatCmd(dp)
+	default:
+		log.Err("[unkown msg_type]: %d %d %d %v", self.DataPack.MsgType, self.DataPack.MsgCmd, self.DataPack.DataLen, self.DataPack.Data)
 	}
 }
 
-func (self *MzRouter) MsgCmd_Login() {
+// 登录的二级命令
+func (self *JekoRouter) MsgCmd_Login() {
 	switch int32(self.DataPack.MsgCmd) {
-	case cst.MsgCmd_value["Login_LoginReq"]:
+	case prt.MsgCmd_value["Login_LoginReq"]:
 		login := auth.NewLoginController()
 		login.DataPack = self.DataPack
 		login.Conn = self.Conn
+		login.Cache = self.Cache
 		login.Login()
+	default:
+		log.Err("[unkown msg_cmd_login]: %d %d %d %v", self.DataPack.MsgType, self.DataPack.MsgCmd, self.DataPack.DataLen, self.DataPack.Data)
+	}
+}
+
+// 房间操作的二级命令
+func (self *JekoRouter) MsgCmd_Room() {
+	room := room.NewRoomController()
+	room.DataPack = self.DataPack
+	room.Conn = self.Conn
+	room.Cache = self.Cache
+	switch int32(self.DataPack.MsgCmd) {
+	case prt.MsgCmd_value["Room_QueryListReq"]:
+		room.QueryRoomList()
+	case prt.MsgCmd_value["Room_GetInReq"]:
+		room.GetIn()
+	case prt.MsgCmd_value["Room_EnterReadyReq"]:
+		room.EnterReady()
+	default:
+		log.Err("[unkown msg_cmd_room]: %d %d %d %v", self.DataPack.MsgType, self.DataPack.MsgCmd, self.DataPack.DataLen, self.DataPack.Data)
 	}
 }

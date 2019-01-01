@@ -9,7 +9,7 @@ import (
 	"net"
 	"unsafe"
 
-	"github.com/Justyer/JekoServer/tcp/model/auth"
+	"github.com/Justyer/JekoServer/tcp/model/prt"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -19,7 +19,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var req auth.LoginReq
+	var req prt.LoginReq
 	req.MAC = "1234"
 	data_byte, _ := proto.Marshal(&req)
 	data_len := len(data_byte)
@@ -70,7 +70,7 @@ func main() {
 	data := buf[8 : dl+8]
 	fmt.Println("dl_buf", dl_buf.Bytes(), data)
 
-	var resp auth.LoginResp
+	var resp prt.LoginResp
 	proto.Unmarshal(data, &resp)
 	fmt.Printf("%#v", resp)
 }

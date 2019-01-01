@@ -1,12 +1,9 @@
 package auth
 
 import (
-	"net"
-
 	"github.com/Justyer/JekoServer/plugin/log"
-	ptl "github.com/Justyer/JekoServer/plugin/protocol"
-	"github.com/Justyer/JekoServer/tcp/model/auth"
-	"github.com/Justyer/JekoServer/tcp/model/cst"
+	"github.com/Justyer/JekoServer/tcp/controller/base"
+	"github.com/Justyer/JekoServer/tcp/model/prt"
 	"github.com/Justyer/JekoServer/tcp/model/user"
 	auth_svc "github.com/Justyer/JekoServer/tcp/service/auth"
 	"github.com/Justyer/lingo/bytes"
@@ -18,22 +15,21 @@ const (
 	UserLogin int32 = 1
 )
 
-type LoginController struct {
-	DataPack *ptl.DataPack_2_2_4
-	Conn     net.Conn
+type loginController struct {
+	base.BaseController
 }
 
-func NewLoginController() *LoginController {
-	return &LoginController{}
+func NewLoginController() *loginController {
+	return &loginController{}
 }
 
-func (self *LoginController) Login() {
-	var req auth.LoginReq
+func (self *loginController) Login() {
+	var req prt.LoginReq
 	proto.Unmarshal(self.DataPack.Data, &req)
 
-	login := auth_svc.NewLoginService()
 	var err error
 	var u user.User
+	login := auth_svc.NewLoginService()
 
 	switch req.Type {
 	case MacLogin:
@@ -42,8 +38,12 @@ func (self *LoginController) Login() {
 		u, err = login.UserLogin(req.UserName, req.PassWord)
 	}
 
+	u.Conn = self.Conn
+
+	self.Cache.User = &u
+
 	// 封装要相应的数据
-	var resp auth.LoginResp
+	var resp prt.LoginResp
 	if err != nil {
 		resp.Code = 1
 	}
@@ -60,7 +60,7 @@ func (self *LoginController) Login() {
 	var resp_final_byte []byte
 
 	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(self.DataPack.MsgType))
-	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(uint16(cst.MsgCmd_value["Login_LoginResp"])))
+	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(uint16(prt.MsgCmd_value["Login_LoginResp"])))
 	resp_final_byte = bytes.Extend(resp_final_byte, len_byte)
 	resp_final_byte = bytes.Extend(resp_final_byte, respByte)
 

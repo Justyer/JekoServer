@@ -4,21 +4,21 @@ import (
 	"github.com/Justyer/JekoServer/tcp/model/user"
 )
 
-type LoginServe struct {
+type loginServe struct {
 }
 
-func NewLoginService() *LoginServe {
-	return &LoginServe{}
+func NewLoginService() *loginServe {
+	return &loginServe{}
 }
 
-func (self *LoginServe) MacLogin(mac string) (user.User, error) {
+func (self *loginServe) MacLogin(mac string) (user.User, error) {
 	var user user.User
 	user.UserID = 9527
 	user.UserName = "zxy"
 	return user, nil
 }
 
-func (self *LoginServe) UserLogin(u, p string) (user.User, error) {
+func (self *loginServe) UserLogin(u, p string) (user.User, error) {
 	dao := user.NewUserDao()
 	user, err := dao.QueryUser(u, p)
 	return user, err

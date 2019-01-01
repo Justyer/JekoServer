@@ -4,8 +4,6 @@ import (
 	"net"
 
 	"github.com/jinzhu/gorm"
-
-	"github.com/Justyer/JekoServer/http/model/user"
 )
 
 var (
@@ -28,6 +26,6 @@ var (
 )
 
 var (
-	// 存储用户的所有信息的汇总,key为username
-	GlobalAcountInfo map[string]user.AcountInfo
+// 存储用户的所有信息的汇总,key为username
+// GlobalAcountInfo map[string]user.AcountInfo
 )
