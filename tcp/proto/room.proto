@@ -27,6 +27,6 @@ message EnterReadyReq {
 
 message EnterReadyResp {
     int32 Code = 1;
-    repeated PlayerDTO PlayerList = 2;
+   
 }
 

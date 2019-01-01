@@ -1,0 +1,12 @@
+syntax="proto3";
+package prt;
+import "dto.proto";
+
+message GetReadyInfoReq {
+}
+
+message GetReadyInfoResp {
+    int32 Code = 1;
+    repeated PlayerDTO PlayerList = 2;
+}
+

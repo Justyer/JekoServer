@@ -24,15 +24,19 @@ enum MsgCmd {
     Room_EnterReadyReq = 6;
     Room_EnterReadyResp = 7;
 
+    //得到准备场景信息
+    Ready_GetInfoReq = 8;
+    Ready_GetInfoResp = 9;
+    
     // 升级
-    Ready_UpgradeReq = 8;
-    Ready_UpgradeResp = 9;
+    Ready_UpgradeReq = 10;
+    Ready_UpgradeResp = 11;
 
     // 开始游戏
-    Ready_StartGameReq = 10;
-    Ready_StartGameResp = 11;
+    Ready_StartGameReq = 12;
+    Ready_StartGameResp = 13;
 
     // 攻击
-    Combat_AttackReq = 12;
-    Combat_AttackResp = 13;
+    Combat_AttackReq = 14;
+    Combat_AttackResp = 15;
 }
