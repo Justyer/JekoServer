@@ -7,5 +7,6 @@ type User struct {
 	UserName string   `gorm:"user_name"`
 	UserPass string   `gorm:"user_pass"`
 	IconURL  string   `gorm:"icon_url"`
+	CurRoom  int32    `gorm:"-"`
 	Conn     net.Conn `gorm:"-"`
 }

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <style type="text/css">
+        html,
+        body {
+            margin: 0%;
+            padding: 0%;
+            width: 100%;
+            height: 100%;
+        }
+
+        .flex-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            background-color: #F0f0f0;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        #main {
+            background: linear-gradient(to top right, rgb(0, 255, 177), cyan);
+        }
+
+        #stage {
+            /* width: 960px;
+            height: 540px; */
+            width: 640px;
+            height: 352px;
+            margin: 20px;
+            border-color: #9999FF;
+            border-radius: 25px;
+            box-shadow: 0 0 5px #FFFFFF;
+            background-color: #FFFFFF;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main" class="flex-container">
+        <div id="stage" class="flex-item">
+            <video src="/static/v.mp4" controls>
+                你的浏览器不支持
+                <code>video</code> 标签.
+            </video>
+        </div>
+    </div>
+    <!-- <script type="text/javascript">
+        var main = document.getElementById('main');
+        setTimeout(function () {
+            var div = document.createElement('div');
+            div.setAttribute('class', 'flex-item');
+            main.appendChild(div);
+        }, 1000);
+
+    </script> -->
+</body>
+
+</html>

@@ -23,7 +23,7 @@ message WeaponDTO {
 }
 
 message WeaponExtraAttrDTO {
-	int32 attrType = 1;//0-attack 1-attackSpeed 2-crit
-	int32 value = 2;
+	int32 AttrType = 1;//0-attack 1-attackSpeed 2-crit
+	int32 Value = 2;
 	
 }

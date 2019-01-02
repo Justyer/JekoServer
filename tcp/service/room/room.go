@@ -52,7 +52,7 @@ func (self *roomServe) GetIn_insert(id int32, c *tool.Cache) (*prt.RoomInfoDTO, 
 	}
 }
 
-func (self *roomServe) GetIn_ff(id int32, b []byte) {
+func (self *roomServe) Distribute(id int32, b []byte) {
 	for _, u := range cache.RoomMap[id].Users {
 		if _, err := u.Conn.Write(b); err != nil {
 			log.Err("[write err]:", err)
@@ -61,6 +61,6 @@ func (self *roomServe) GetIn_ff(id int32, b []byte) {
 	}
 }
 
-func (self *roomServe) EnterReady() {
-
+func (self *roomServe) GetRoomID(c *tool.Cache) int32 {
+	return c.User.CurRoom
 }

@@ -27,6 +27,5 @@ message EnterReadyReq {
 
 message EnterReadyResp {
     int32 Code = 1;
-   
 }
 

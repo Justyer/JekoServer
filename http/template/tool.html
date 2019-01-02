@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tool</title>
+    <script type="text/javascript" src="/static/jquery-2.1.1.min.js"></script>
+</head>
+
+<body>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input id="file" type="file" name="file" />
+        <button id="upload" type="button" onclick="x()">upload</button>
+    </form>
+    <script>
+        function x() {
+            alert("fdfd");
+            var formData = new FormData();
+            formData.append('file', $('#file')[0].files[0]);
+            $.ajax({
+                url: '/upload',
+                type: 'POST',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (res) {
+            }).fail(function (res) { });
+        }
+    </script>
+</body>
+
+</html>

@@ -56,14 +56,21 @@ func (self *JekoRouter) MsgCmd_Room() {
 	room.DataPack = self.DataPack
 	room.Conn = self.Conn
 	room.Cache = self.Cache
-	switch int32(self.DataPack.MsgCmd) {
-	case prt.MsgCmd_value["Room_QueryListReq"]:
-		room.QueryRoomList()
-	case prt.MsgCmd_value["Room_GetInReq"]:
-		room.GetIn()
-	case prt.MsgCmd_value["Room_EnterReadyReq"]:
-		room.EnterReady()
-	default:
-		log.Err("[unkown msg_cmd_room]: %d %d %d %v", self.DataPack.MsgType, self.DataPack.MsgCmd, self.DataPack.DataLen, self.DataPack.Data)
+
+	cmd := int32(self.DataPack.MsgCmd)
+	for {
+		switch cmd {
+		case prt.MsgCmd_value["Room_QueryListReq"]:
+			cmd = room.QueryRoomList()
+		case prt.MsgCmd_value["Room_GetInReq"]:
+			cmd = room.GetIn()
+		case prt.MsgCmd_value["Room_EnterReadyReq"]:
+			cmd = room.EnterReady()
+		default:
+			log.Err("[unkown msg_cmd_room]: %d %d %d %v", self.DataPack.MsgType, self.DataPack.MsgCmd, self.DataPack.DataLen, self.DataPack.Data)
+		}
+		if cmd == int32(-1) {
+			break
+		}
 	}
 }
