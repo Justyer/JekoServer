@@ -2,41 +2,46 @@ syntax="proto3";
 package prt;
 
 enum MsgType {
-    Login = 0;
-    Room = 1;
-    Ready = 2;
-    Combat = 3;
+    HeartBeat = 0;
+    Login = 1;
+    Room = 2;
+    Ready = 3;
+    Combat = 4;
 }
 
 enum MsgCmd {
+    // 心跳
+    HeartBeart_ClientSend = 0;
+    HeartBeart_ServerSend = 1;
+
     // 登录
-    Login_LoginReq = 0;
-    Login_LoginResp = 1;
+    Login_LoginReq = 2;
+    Login_LoginResp = 3;
 
     // 查询房间列表
-    Room_QueryListReq = 2;
-    Room_QueryListResp = 3;
+    Room_QueryListReq = 4;
+    Room_QueryListResp = 5;
     // 进入房间
-    Room_GetInReq = 4;
-    Room_GetInResp = 5;
+    Room_GetInReq = 6;
+    Room_GetInResp = 7;
 
     // 进入准备场景
-    Room_EnterReadyReq = 6;
-    Room_EnterReadyResp = 7;
+    Room_EnterReadyReq = 8;
+    Room_EnterReadyResp = 9;
 
     //得到准备场景信息
-    Ready_GetInfoReq = 8;
-    Ready_GetInfoResp = 9;
+    Ready_GetInfoReq = 10;
+    Ready_GetInfoResp = 11;
     
     // 升级
-    Ready_UpgradeReq = 10;
-    Ready_UpgradeResp = 11;
+    Ready_UpgradeReq = 12;
+    Ready_UpgradeResp = 13;
 
     // 开始游戏
-    Ready_StartGameReq = 12;
-    Ready_StartGameResp = 13;
+    Ready_StartGameReq = 14;
+    Ready_StartGameResp = 15;
 
     // 攻击
-    Combat_AttackReq = 14;
-    Combat_AttackResp = 15;
+    Combat_AttackReq = 16;
+    Combat_AttackResp = 17;
 }
