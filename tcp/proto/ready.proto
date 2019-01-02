@@ -7,9 +7,8 @@ message GetReadyInfoReq {
 
 message GetReadyInfoResp {
     int32 Code = 1;
-    int32 AttributeNum = 2;
     //repeated PlayerDTO PlayerList = 3;
-    repeated UserInfoDTO UserList = 3;
+    repeated UserInfoDTO UserList = 2;
 }
 
 message PrepareCombatReq {
