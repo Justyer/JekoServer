@@ -33,15 +33,11 @@ enum MsgCmd {
     Ready_GetInfoReq = 10;
     Ready_GetInfoResp = 11;
     
-    // 升级
-    Ready_UpgradeReq = 12;
-    Ready_UpgradeResp = 13;
-
     // 开始游戏
-    Ready_StartGameReq = 14;
-    Ready_StartGameResp = 15;
+    Ready_PrepareCombatReq = 12;
+    Ready_PrepareCombatResp = 13;
 
     // 攻击
-    Combat_AttackReq = 16;
-    Combat_AttackResp = 17;
+    Combat_AttackReq = 14;
+    Combat_AttackResp = 15;
 }
