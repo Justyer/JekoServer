@@ -3,6 +3,8 @@ package router
 import (
 	"net"
 
+	"github.com/Justyer/JekoServer/tcp/controller/ready"
+
 	"github.com/Justyer/JekoServer/tcp/controller/room"
 	"github.com/Justyer/JekoServer/tcp/model/prt"
 	"github.com/Justyer/JekoServer/tcp/model/tool"
@@ -29,6 +31,8 @@ func (self *JekoRouter) MsgType() {
 		self.MsgCmd_Login()
 	case prt.MsgType_value["Room"]:
 		self.MsgCmd_Room()
+	case prt.MsgType_value["Ready"]:
+		self.MsgCmd_Ready()
 	// case cst.MsgType_value["Combat"]:
 	// 	ComBatCmd(dp)
 	default:
@@ -66,6 +70,29 @@ func (self *JekoRouter) MsgCmd_Room() {
 			cmd = room.GetIn()
 		case prt.MsgCmd_value["Room_EnterReadyReq"]:
 			cmd = room.EnterReady()
+		default:
+			log.Err("[unkown msg_cmd_room]: %d %d %d %v", self.DataPack.MsgType, self.DataPack.MsgCmd, self.DataPack.DataLen, self.DataPack.Data)
+		}
+		if cmd == int32(-1) {
+			break
+		}
+	}
+}
+
+// 准备界面的二级命令
+func (self *JekoRouter) MsgCmd_Ready() {
+	ready := ready.NewReadyController()
+	ready.DataPack = self.DataPack
+	ready.Conn = self.Conn
+	ready.Cache = self.Cache
+
+	cmd := int32(self.DataPack.MsgCmd)
+	for {
+		switch cmd {
+		case prt.MsgCmd_value["Ready_GetInfoReq"]:
+			cmd = ready.ReadyInfo()
+		case prt.MsgCmd_value["Ready_PrepareCombatReq"]:
+			// cmd = ready.GetIn()
 		default:
 			log.Err("[unkown msg_cmd_room]: %d %d %d %v", self.DataPack.MsgType, self.DataPack.MsgCmd, self.DataPack.DataLen, self.DataPack.Data)
 		}

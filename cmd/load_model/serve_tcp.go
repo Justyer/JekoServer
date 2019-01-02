@@ -27,6 +27,7 @@ func (self *TCPConfig) initIP() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	model.HTTPIPort = fmt.Sprintf("%s:%d", IP, viper.GetInt("config.http_serve_port"))
 	model.TCPIPort = fmt.Sprintf("%s:%d", IP, viper.GetInt("config.tcp_serve_port"))
 }
 
