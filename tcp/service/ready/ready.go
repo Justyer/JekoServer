@@ -22,6 +22,11 @@ func (self *readyServe) ReadyInfo(c *tool.Cache) ([]*prt.UserInfoDTO, error) {
 		var user prt.UserInfoDTO
 		user.UserName = u.UserName
 		user.IconURL = u.IconURL
+		user.AttributeNum = int32(50)
+		var wp prt.WeaponDTO
+		wp.ID = 1
+		wp.SN = 2
+		user.Weapon = &wp
 		us = append(us, &user)
 	}
 	return us, nil

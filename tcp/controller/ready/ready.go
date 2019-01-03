@@ -27,7 +27,6 @@ func (self *readyController) ReadyInfo() int32 {
 
 	var resp prt.GetReadyInfoResp
 	resp.Code = 0
-	resp.AttributeNum = int32(50)
 	resp.UserList = user_list
 	respByte, err := proto.Marshal(&resp)
 	if err != nil {
