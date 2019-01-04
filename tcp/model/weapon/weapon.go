@@ -3,7 +3,7 @@ package weapon
 type Weapon struct {
 	ID         int32
 	SN         int32
-	ExtraAttrs []WeaponExtraAttr
+	ExtraAttrs []*WeaponExtraAttr
 }
 
 type WeaponExtraAttr struct {
