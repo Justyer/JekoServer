@@ -3,6 +3,8 @@ package ready
 import (
 	"time"
 
+	"github.com/Justyer/JekoServer/tcp/model/cache"
+
 	"github.com/Justyer/JekoServer/plugin/log"
 	"github.com/Justyer/JekoServer/tcp/controller/base"
 	"github.com/Justyer/JekoServer/tcp/model/prt"
@@ -80,6 +82,11 @@ func (self *readyController) PrepareCombat() int32 {
 	room_id := ready.GetRoomID(self.Cache)
 	time.AfterFunc(5*time.Second, func() {
 		ready.Distribute(room_id, resp_final_byte)
+		for _, u := range cache.RoomMap[room_id].Users {
+			for _, e := range u.Weapon.ExtraAttrs {
+				log.Tx("k-v: %d %d", e.AttrType, e.Value)
+			}
+		}
 	})
 
 	return int32(-1)
