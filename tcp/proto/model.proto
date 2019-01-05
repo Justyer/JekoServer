@@ -21,7 +21,7 @@ message UserInfo {
 message Weapon {
   	int32 ID = 1;
   	int32 SN = 2;
-  	repeated WeaponExtraAttr WeaponList = 3;
+  	repeated WeaponExtraAttr WeaponExtraAttrList = 3;
 }
 
 message WeaponExtraAttr {
