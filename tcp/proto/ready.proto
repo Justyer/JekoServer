@@ -1,18 +1,18 @@
 syntax="proto3";
 package prt;
-import "dto.proto";
+import "model.proto";
 
 message GetReadyInfoReq {
 }
 
 message GetReadyInfoResp {
     int32 Code = 1;
-    //repeated PlayerDTO PlayerList = 3;
-    repeated UserInfoDTO UserList = 2;
+    //repeated Player PlayerList = 3;
+    repeated UserInfo UserList = 2;
 }
 
 message PrepareCombatReq {
-	repeated WeaponExtraAttrDTO WeaponList = 1;
+	repeated WeaponExtraAttr WeaponExtraAttrList = 1;
 }
 
 message PrepareCombatResp {

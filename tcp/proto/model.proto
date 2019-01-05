@@ -1,30 +1,30 @@
 syntax="proto3";
 package prt;
 
-message RoomInfoDTO {
+message RoomInfo {
 	int32 ID = 1;
-  	repeated UserInfoDTO UserList = 2;
+  	repeated UserInfo UserList = 2;
 }
 
-message UserInfoDTO {
+message UserInfo {
 	string UserName = 1;
  	string IconURL = 2;
- 	WeaponDTO Weapon = 3;
+ 	Weapon Weapon = 3;
  	int32 AttributeNum = 4;//属性点
 }
 
-//message PlayerDTO {
+//message Player {
 //	int32 UserID = 1;
-//	WeaponDTO Weapon = 2;
+//	Weapon Weapon = 2;
 //}
 
-message WeaponDTO {
+message Weapon {
   	int32 ID = 1;
   	int32 SN = 2;
-  	repeated WeaponExtraAttrDTO WeaponList = 3;
+  	repeated WeaponExtraAttr WeaponList = 3;
 }
 
-message WeaponExtraAttrDTO {
+message WeaponExtraAttr {
 	int32 AttrType = 1;//0-attack 1-attackSpeed 2-crit
 	int32 Value = 2;
 	

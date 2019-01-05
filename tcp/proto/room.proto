@@ -1,6 +1,6 @@
 syntax="proto3";
 package prt;
-import "dto.proto";
+import "model.proto";
 
 message QueryRoomListReq {
     int32 Page = 1;
@@ -9,7 +9,7 @@ message QueryRoomListReq {
 
 message QueryRoomListResp {
   	int32 Code = 1;
-  	repeated RoomInfoDTO RoomList = 2;
+  	repeated RoomInfo RoomList = 2;
 }	
 
 message GetInRoomReq {
@@ -18,7 +18,7 @@ message GetInRoomReq {
 
 message GetInRoomResp {
 	int32 Code = 1;
-    RoomInfoDTO Room = 2;
+    RoomInfo Room = 2;
 
 }
 
