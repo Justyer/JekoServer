@@ -113,7 +113,7 @@ func (self *roomController) EnterReady() int32 {
 	resp_final_byte = bytes.Extend(resp_final_byte, respByte)
 
 	// 所有人都进入房间后，5秒后进入准备界面
-	time.AfterFunc(5*time.Second, func() {
+	time.AfterFunc(2*time.Second, func() {
 		room.Distribute(room_id, resp_final_byte)
 	})
 

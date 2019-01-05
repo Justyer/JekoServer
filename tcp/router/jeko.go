@@ -92,7 +92,7 @@ func (self *JekoRouter) MsgCmd_Ready() {
 		case prt.MsgCmd_value["Ready_GetInfoReq"]:
 			cmd = ready.ReadyInfo()
 		case prt.MsgCmd_value["Ready_PrepareCombatReq"]:
-			// cmd = ready.GetIn()
+			cmd = ready.PrepareCombat()
 		default:
 			log.Err("[unkown msg_cmd_room]: %d %d %d %v", self.DataPack.MsgType, self.DataPack.MsgCmd, self.DataPack.DataLen, self.DataPack.Data)
 		}

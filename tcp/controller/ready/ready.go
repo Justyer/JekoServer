@@ -78,7 +78,7 @@ func (self *readyController) PrepareCombat() int32 {
 	resp_final_byte = bytes.Extend(resp_final_byte, respByte)
 
 	room_id := ready.GetRoomID(self.Cache)
-	time.AfterFunc(10*time.Second, func() {
+	time.AfterFunc(5*time.Second, func() {
 		ready.Distribute(room_id, resp_final_byte)
 	})
 
