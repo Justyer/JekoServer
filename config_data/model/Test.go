@@ -1,4 +1,5 @@
      
+package config
 type Test struct {
     //名称
         Name string;
