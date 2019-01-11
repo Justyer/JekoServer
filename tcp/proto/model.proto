@@ -7,10 +7,11 @@ message RoomInfo {
 }
 
 message UserInfo {
-	string UserName = 1;
- 	string IconURL = 2;
- 	Weapon Weapon = 3;
- 	int32 AttributeNum = 4;//属性点
+	int32 UserID = 1;
+	string UserName = 2;
+ 	string IconURL = 3;
+ 	Weapon Weapon = 4;
+ 	int32 AttributeNum = 5;//属性点
 }
 
 //message Player {
