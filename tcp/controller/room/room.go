@@ -3,119 +3,97 @@ package room
 import (
 	"time"
 
+	"github.com/Justyer/jie"
+
 	"github.com/Justyer/JekoServer/plugin/log"
-	"github.com/Justyer/JekoServer/tcp/controller/base"
-	"github.com/Justyer/JekoServer/tcp/model/prt"
+	prt "github.com/Justyer/JekoServer/tcp/model/proto"
+	"github.com/Justyer/JekoServer/tcp/model/world"
 	"github.com/Justyer/JekoServer/tcp/service/room"
-	"github.com/Justyer/lingo/bytes"
-	"github.com/golang/protobuf/proto"
 )
 
-type roomController struct {
-	base.BaseController
-}
-
-func NewRoomController() *roomController {
-	return &roomController{}
-}
-
-func (self *roomController) QueryRoomList() int32 {
+// 查询房间列表
+func QueryRoomListController(c *jie.Context) {
 	var req prt.QueryRoomListReq
-	proto.Unmarshal(self.DataPack.Data, &req)
+	if err := c.BindProtoReq(&req); err != nil {
+		log.Err("[QueryRoomListController bind_req_err]: %s", err.Error())
+		return
+	}
+	log.Tx("[QueryRoomListController req]: %s", req.String())
 
-	// var err error
-	room := room.NewRoomService()
-	room_list, _ := room.QueryRoomList()
+	svc := room.NewRoomService(c)
+	room_list := svc.QueryRoomList()
 
 	var resp prt.QueryRoomListResp
 	resp.Code = 0
 	resp.RoomList = room_list
-	respByte, err := proto.Marshal(&resp)
+	data_b, err := c.PackProtoResp(&resp)
 	if err != nil {
-		log.Err(err.Error())
+		log.Err("[QueryRoomListController pack_resp_err]: %s", err.Error())
+		return
 	}
-	log.Tx("[req_data]: %s", req.String())
-	log.Tx("[resp_data]: %s", resp.String())
-	len_byte := bytes.ToByteForLE(int32(len(respByte)))
+	log.Tx("[QueryRoomListController resp]: %s", resp.String())
 
-	var resp_final_byte []byte
+	final_b := svc.PackProtocol(uint16(prt.MsgCmd_value["Room_QueryListResp"]), data_b)
 
-	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(self.DataPack.MsgType))
-	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(uint16(prt.MsgCmd_value["Room_QueryListResp"])))
-	resp_final_byte = bytes.Extend(resp_final_byte, len_byte)
-	resp_final_byte = bytes.Extend(resp_final_byte, respByte)
-
-	if _, err := self.Conn.Write(resp_final_byte); err != nil {
-		log.Err("[write err]:", err)
-	}
-	log.Succ("[resp_final_byte]: %v", resp_final_byte)
-
-	return int32(-1)
+	c.Send(final_b)
 }
 
-func (self *roomController) GetIn() int32 {
+// 进入房间
+func GetInController(c *jie.Context) {
 	var req prt.GetInRoomReq
-	proto.Unmarshal(self.DataPack.Data, &req)
+	if err := c.BindProtoReq(&req); err != nil {
+		log.Err("[GetInController bind_req_err]: %s", err.Error())
+		return
+	}
+	log.Tx("[GetInController req]: %s", req.String())
 
-	var err error
-	room := room.NewRoomService()
-	room_info, err := room.GetIn_insert(req.ID, self.Cache)
+	svc := room.NewRoomService(c)
+	room_info, err := svc.GetIn(req.ID)
 
 	var resp prt.GetInRoomResp
 	if err != nil {
 		resp.Code = 1
 	}
-	self.Cache.User.CurRoom = req.ID
+	c.Put("room_id", req.ID)
 	resp.Room = room_info
-	respByte, err := proto.Marshal(&resp)
+	data_byte, err := c.PackProtoResp(&resp)
 	if err != nil {
-		log.Err(err.Error())
+		log.Err("[GetInController pack_resp_err]: %s", err.Error())
+		return
 	}
-	log.Tx("[req_data]: %s", req.String())
-	log.Tx("[resp_data]: %s", resp.String())
-	len_byte := bytes.ToByteForLE(int32(len(respByte)))
+	log.Tx("[GetInController resp]: %s", resp.String())
 
-	var resp_final_byte []byte
+	final_b := svc.PackProtocol(uint16(prt.MsgCmd_value["Room_GetInResp"]), data_byte)
 
-	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(self.DataPack.MsgType))
-	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(uint16(prt.MsgCmd_value["Room_GetInResp"])))
-	resp_final_byte = bytes.Extend(resp_final_byte, len_byte)
-	resp_final_byte = bytes.Extend(resp_final_byte, respByte)
+	conns := svc.GetAllConnInRoom(req.ID)
+	c.Broadcast(final_b, conns)
 
-	room.Distribute(req.ID, resp_final_byte)
-
-	if len(room_info.UserList) >= 2 {
-		return prt.MsgCmd_value["Room_EnterReadyReq"]
+	if len(room_info.UserList) >= world.MaxRoom {
+		c.Redirect(uint16(prt.MsgType_value["Room"]), uint16(prt.MsgCmd_value["Room_EnterReadyReq"]))
 	}
-
-	return int32(-1)
 }
 
-func (self *roomController) EnterReady() int32 {
-	room := room.NewRoomService()
-	room_id := room.GetRoomID(self.Cache)
+// 进入准备阶段
+func EnterReadyController(c *jie.Context) {
+	log.Tx("[EnterReadyController req]: %s", "")
+
+	svc := room.NewRoomService(c)
+	room_id := svc.GetRoomID()
 
 	var resp prt.EnterReadyResp
 	resp.Code = 0
-	respByte, err := proto.Marshal(&resp)
+	data_byte, err := c.PackProtoResp(&resp)
 	if err != nil {
-		log.Err(err.Error())
+		log.Err("[EnterReadyController pack_resp_err]: %s", err.Error())
+		return
 	}
-	log.Tx("[req_data]: %s", "")
-	log.Tx("[resp_data]: %s", resp.String())
-	len_byte := bytes.ToByteForLE(int32(len(respByte)))
+	log.Tx("[EnterReadyController resp]: %s", resp.String())
 
-	var resp_final_byte []byte
+	final_b := svc.PackProtocol(uint16(prt.MsgCmd_value["Room_EnterReadyResp"]), data_byte)
 
-	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(self.DataPack.MsgType))
-	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(uint16(prt.MsgCmd_value["Room_EnterReadyResp"])))
-	resp_final_byte = bytes.Extend(resp_final_byte, len_byte)
-	resp_final_byte = bytes.Extend(resp_final_byte, respByte)
-
-	// 所有人都进入房间后，5秒后进入准备界面
+	// 所有人都进入房间后，2秒后进入准备界面
 	time.AfterFunc(2*time.Second, func() {
-		room.Distribute(room_id, resp_final_byte)
+		conns := svc.GetAllConnInRoom(room_id)
+		c.Broadcast(final_b, conns)
 	})
-
-	return int32(-1)
 }

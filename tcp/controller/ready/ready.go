@@ -3,91 +3,68 @@ package ready
 import (
 	"time"
 
-	"github.com/Justyer/JekoServer/tcp/model/cache"
+	"github.com/Justyer/jie"
 
 	"github.com/Justyer/JekoServer/plugin/log"
-	"github.com/Justyer/JekoServer/tcp/controller/base"
-	"github.com/Justyer/JekoServer/tcp/model/prt"
+	prt "github.com/Justyer/JekoServer/tcp/model/proto"
 	"github.com/Justyer/JekoServer/tcp/service/ready"
-	"github.com/Justyer/lingo/bytes"
-	"github.com/golang/protobuf/proto"
 )
 
-type readyController struct {
-	base.BaseController
-}
-
-func NewReadyController() *readyController {
-	return &readyController{}
-}
-
-func (self *readyController) ReadyInfo() int32 {
+// 进入准备界面后，给房间内的每个人发一份所有人的信息
+func ReadyInfoController(c *jie.Context) {
 	var req prt.GetReadyInfoReq
-	proto.Unmarshal(self.DataPack.Data, &req)
+	if err := c.BindProtoReq(&req); err != nil {
+		log.Err("[ReadyInfoController bind_req_err]: %s", err.Error())
+		return
+	}
+	log.Tx("[ReadyInfoController req]: %s", req.String())
 
-	// var err error
-	ready := ready.NewReadyService()
-	user_list, _ := ready.ReadyInfo(self.Cache)
+	svc := ready.NewReadyService(c)
+	user_list := svc.GetAllUserInRoom()
 
 	var resp prt.GetReadyInfoResp
 	resp.Code = 0
 	resp.UserList = user_list
-	respByte, err := proto.Marshal(&resp)
+	data_b, err := c.PackProtoResp(&resp)
 	if err != nil {
-		log.Err(err.Error())
+		log.Err("[ReadyInfoController pack_resp_err]: %s", err.Error())
+		return
 	}
-	log.Tx("[req_data]: %s", req.String())
-	log.Tx("[resp_data]: %s", resp.String())
-	len_byte := bytes.ToByteForLE(int32(len(respByte)))
+	log.Tx("[ReadyInfoController resp]: %s", resp.String())
 
-	var resp_final_byte []byte
+	final_b := svc.PackProtocol(uint16(prt.MsgCmd_value["Ready_GetInfoResp"]), data_b)
 
-	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(self.DataPack.MsgType))
-	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(uint16(prt.MsgCmd_value["Ready_GetInfoResp"])))
-	resp_final_byte = bytes.Extend(resp_final_byte, len_byte)
-	resp_final_byte = bytes.Extend(resp_final_byte, respByte)
+	c.Send(final_b)
 
-	if _, err := self.Conn.Write(resp_final_byte); err != nil {
-		log.Err("[write err]:", err)
-	}
-	log.Succ("[resp_final_byte]: %v", resp_final_byte)
-
-	return int32(-1)
+	c.Redirect(uint16(prt.MsgType_value["Ready"]), uint16(prt.MsgCmd_value["Ready_PrepareCombatReq"]))
 }
 
-func (self *readyController) PrepareCombat() int32 {
+// 保存武器属性
+func PrepareCombatController(c *jie.Context) {
 	var req prt.PrepareCombatReq
-	proto.Unmarshal(self.DataPack.Data, &req)
+	if err := c.BindProtoReq(&req); err != nil {
+		log.Err("[PrepareCombatController bind_req_err]: %s", err.Error())
+		return
+	}
+	log.Tx("[PrepareCombatController req]: %s", req.String())
 
-	ready := ready.NewReadyService()
-	ready.AddWeaponAddr(req.WeaponList, self.Cache)
+	svc := ready.NewReadyService(c)
+	svc.AddWeaponAddr(req.WeaponExtraAttrList)
 
 	var resp prt.PrepareCombatResp
-	resp.Code = 0
-	respByte, err := proto.Marshal(&resp)
+	data_b, err := c.PackProtoResp(&resp)
 	if err != nil {
-		log.Err(err.Error())
+		log.Err("[PrepareCombatController pack_resp_err]: %s", err.Error())
+		return
 	}
-	log.Tx("[req_data]: %s", "")
-	log.Tx("[resp_data]: %s", resp.String())
-	len_byte := bytes.ToByteForLE(int32(len(respByte)))
+	log.Tx("[PrepareCombatController resp]: %s", resp.String())
 
-	var resp_final_byte []byte
+	final_b := svc.PackProtocol(uint16(prt.MsgCmd_value["Ready_PrepareCombatResp"]), data_b)
 
-	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(self.DataPack.MsgType))
-	resp_final_byte = bytes.Extend(resp_final_byte, bytes.ToByteForLE(uint16(prt.MsgCmd_value["Ready_PrepareCombatResp"])))
-	resp_final_byte = bytes.Extend(resp_final_byte, len_byte)
-	resp_final_byte = bytes.Extend(resp_final_byte, respByte)
-
-	room_id := ready.GetRoomID(self.Cache)
+	room_id := svc.GetRoomID()
+	// 某一个人提交天赋后，进入游戏的倒计时变为5秒
 	time.AfterFunc(5*time.Second, func() {
-		ready.Distribute(room_id, resp_final_byte)
-		for _, u := range cache.RoomMap[room_id].Users {
-			for _, e := range u.Weapon.ExtraAttrs {
-				log.Tx("k-v: %d %d", e.AttrType, e.Value)
-			}
-		}
+		conns := svc.GetAllConnInRoom(room_id)
+		c.Broadcast(final_b, conns)
 	})
-
-	return int32(-1)
 }

@@ -1,6 +1,6 @@
 [config]
-tcp_serve_port = 9595
-http_serve_port = 9596
+tcp_port = 9595
+http_port = 9596
 
 [mysql]
 user = "root"

@@ -2,11 +2,10 @@ package load_model
 
 import (
 	mysql "Groot/src/golibs/db/mysql/gorm"
-	"fmt"
-	"log"
+
+	"github.com/Justyer/lingo/ip"
 
 	"github.com/Justyer/JekoServer/tcp/model"
-	"github.com/Justyer/lingo/util"
 	"github.com/spf13/viper"
 )
 
@@ -23,12 +22,9 @@ func (self *TCPConfig) LoadModel() {
 }
 
 func (self *TCPConfig) initIP() {
-	IP, err := util.LocalIP()
-	if err != nil {
-		log.Fatal(err)
-	}
-	model.HTTPIPort = fmt.Sprintf("%s:%d", IP, viper.GetInt("config.http_serve_port"))
-	model.TCPIPort = fmt.Sprintf("%s:%d", IP, viper.GetInt("config.tcp_serve_port"))
+	model.IP = ip.MustInnerIP()
+	model.HTTPPort = viper.GetString("config.http_port")
+	model.TCPPort = viper.GetString("config.tcp_port")
 }
 
 func (self *TCPConfig) initDB() {

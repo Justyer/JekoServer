@@ -1,66 +1,50 @@
 package room
 
 import (
-	"errors"
-
-	"github.com/Justyer/JekoServer/plugin/log"
-	"github.com/Justyer/JekoServer/tcp/model/cache"
-	"github.com/Justyer/JekoServer/tcp/model/prt"
-	"github.com/Justyer/JekoServer/tcp/model/tool"
+	prt "github.com/Justyer/JekoServer/tcp/model/proto"
+	prtx "github.com/Justyer/JekoServer/tcp/model/protox"
+	"github.com/Justyer/JekoServer/tcp/model/world"
+	"github.com/Justyer/JekoServer/tcp/service/base"
+	"github.com/Justyer/jie"
 )
 
-type roomServe struct {
+type roomService struct {
+	base.BaseService
 }
 
-func NewRoomService() *roomServe {
-	return &roomServe{}
+func NewRoomService(c *jie.Context) *roomService {
+	s := &roomService{}
+	s.Ctx = c
+	return s
 }
 
-func (self *roomServe) QueryRoomList() ([]*prt.RoomInfoDTO, error) {
-	var room_list []*prt.RoomInfoDTO
-	for _, r := range cache.RoomMap {
-		var r_dto prt.RoomInfoDTO
-
-		r_dto.ID = r.ID
-		for _, u := range r.Users {
-			var user prt.UserInfoDTO
-			user.UserName = u.UserName
-			user.IconURL = u.IconURL
-			r_dto.UserList = append(r_dto.UserList, &user)
+// 查询房间列表
+func (self *roomService) QueryRoomList() []*prt.RoomInfo {
+	var ris []*prt.RoomInfo
+	for _, room := range world.JekoWorld.RoomList {
+		var ri prt.RoomInfo
+		var ul []*prt.UserInfo
+		for _, ui := range room.UserList {
+			ul = append(ul, &ui.UserInfo)
 		}
-
-		room_list = append(room_list, &r_dto)
+		ri = room.RoomInfo
+		ri.UserList = ul
+		ris = append(ris, &ri)
 	}
-	return room_list, nil
+	return ris
 }
 
-func (self *roomServe) GetIn_insert(id int32, c *tool.Cache) (*prt.RoomInfoDTO, error) {
-	cache.RoomMap[id].Users = append(cache.RoomMap[id].Users, c.User)
+// 根据房间id将玩家放入房间
+func (self *roomService) GetIn(id int32) (*prt.RoomInfo, error) {
+	u := self.Ctx.Get("user").(prtx.UserInfo)
+	world.JekoWorld.RoomList[id].UserList = append(world.JekoWorld.RoomList[id].UserList, &u)
 
-	if r, ok := cache.RoomMap[id]; !ok {
-		return nil, errors.New("room_id not exist")
-	} else {
-		var ri prt.RoomInfoDTO
-		ri.ID = r.ID
-		for _, u := range r.Users {
-			var user prt.UserInfoDTO
-			user.UserName = u.UserName
-			user.IconURL = u.IconURL
-			ri.UserList = append(ri.UserList, &user)
-		}
-		return &ri, nil
+	var ri prt.RoomInfo
+	var us []*prt.UserInfo
+	for _, ul := range world.JekoWorld.RoomList[id].UserList {
+		us = append(us, &ul.UserInfo)
 	}
-}
-
-func (self *roomServe) Distribute(id int32, b []byte) {
-	for _, u := range cache.RoomMap[id].Users {
-		if _, err := u.Conn.Write(b); err != nil {
-			log.Err("[write err]:", err)
-		}
-		log.Succ("[resp_final_byte]: %v", b)
-	}
-}
-
-func (self *roomServe) GetRoomID(c *tool.Cache) int32 {
-	return c.User.CurRoom
+	ri = world.JekoWorld.RoomList[id].RoomInfo
+	ri.UserList = us
+	return &ri, nil
 }

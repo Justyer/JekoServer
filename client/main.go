@@ -9,7 +9,8 @@ import (
 	"net"
 	"unsafe"
 
-	"github.com/Justyer/JekoServer/tcp/model/prt"
+	"github.com/Justyer/JekoServer/tcp-old/model/prt"
+	bb "github.com/Justyer/lingo/bytes"
 	"github.com/Justyer/lingo/ip"
 	"github.com/golang/protobuf/proto"
 )
@@ -22,9 +23,12 @@ func main() {
 
 	var req prt.LoginReq
 	req.MAC = "1234"
+	req.UserName = "dxc"
+	req.PassWord = "111"
 	data_byte, _ := proto.Marshal(&req)
 	data_len := len(data_byte)
-	len_byte := Uint322Byte(uint32(data_len))
+	// len_byte := Uint322Byte(uint32(data_len))
+	len_byte := bb.ToByteForLE(uint32(data_len))
 
 	cate1_byte := []byte{
 		byte(uint16(1)),
@@ -36,9 +40,10 @@ func main() {
 	}
 
 	final_byte := BytesCombine(cate1_byte, cate2_byte, len_byte, data_byte)
+	fmt.Println(cate1_byte, cate2_byte, data_len, uint32(data_len), data_byte)
 	// final_byte := BytesCombine(cate1_byte, cate2_byte)
 	conn.Write(final_byte)
-	conn.Write(final_byte)
+	// conn.Write(final_byte)
 	// for {
 	// 	var x int
 	// 	fmt.Scanf("%d", &x)

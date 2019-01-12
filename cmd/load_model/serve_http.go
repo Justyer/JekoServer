@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/Justyer/JekoServer/http/model"
-	"github.com/Justyer/lingo/util"
+	"github.com/Justyer/lingo/ip"
 	"github.com/spf13/viper"
 )
 
@@ -23,7 +23,7 @@ func (self *HTTPConfig) LoadModel() {
 }
 
 func (self *HTTPConfig) initIP() {
-	IP, err := util.LocalIP()
+	IP, err := ip.InnerIP()
 	if err != nil {
 		log.Fatal(err)
 	}

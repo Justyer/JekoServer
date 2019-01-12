@@ -1,5 +1,5 @@
-protoc --go_out=../model/prt/ auth.proto
-protoc --go_out=../model/prt/ cst.proto
-protoc --go_out=../model/prt/ room.proto
-protoc --go_out=../model/prt/ model.proto
-protoc --go_out=../model/prt/ ready.proto
+protoc --go_out=../model/proto/ auth.proto
+protoc --go_out=../model/proto/ enum.proto
+protoc --go_out=../model/proto/ room.proto
+protoc --go_out=../model/proto/ model.proto
+protoc --go_out=../model/proto/ ready.proto
