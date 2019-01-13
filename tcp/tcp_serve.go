@@ -1,12 +1,13 @@
 package tcp
 
 import (
-	"github.com/Justyer/JekoServer/tcp/model"
+	"github.com/Justyer/JekoServer/model"
 	"github.com/Justyer/JekoServer/tcp/router"
 	"github.com/Justyer/jie"
 	protocol "github.com/Justyer/jie/protocol/ptl_2_2_4"
 )
 
+// TCPServe : TCP服务
 func TCPServe() {
 	j := jie.New()
 

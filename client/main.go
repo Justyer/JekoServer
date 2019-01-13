@@ -5,11 +5,9 @@ import (
 	"encoding/binary"
 	"fmt"
 	"log"
-	"math"
 	"net"
-	"unsafe"
 
-	"github.com/Justyer/JekoServer/tcp-old/model/prt"
+	prt "github.com/Justyer/JekoServer/tcp/model/proto"
 	bb "github.com/Justyer/lingo/bytes"
 	"github.com/Justyer/lingo/ip"
 	"github.com/golang/protobuf/proto"
@@ -27,21 +25,13 @@ func main() {
 	req.PassWord = "111"
 	data_byte, _ := proto.Marshal(&req)
 	data_len := len(data_byte)
-	// len_byte := Uint322Byte(uint32(data_len))
 	len_byte := bb.ToByteForLE(uint32(data_len))
 
-	cate1_byte := []byte{
-		byte(uint16(1)),
-		byte(uint16(1) >> 8),
-	}
-	cate2_byte := []byte{
-		byte(uint16(2)),
-		byte(uint16(2) >> 8),
-	}
+	cate1_byte := bb.ToByteForLE(uint16(1))
+	cate2_byte := bb.ToByteForLE(uint16(2))
 
-	final_byte := BytesCombine(cate1_byte, cate2_byte, len_byte, data_byte)
+	final_byte := bb.Merge(cate1_byte, cate2_byte, len_byte, data_byte)
 	fmt.Println(cate1_byte, cate2_byte, data_len, uint32(data_len), data_byte)
-	// final_byte := BytesCombine(cate1_byte, cate2_byte)
 	conn.Write(final_byte)
 	// conn.Write(final_byte)
 	// for {
@@ -53,7 +43,7 @@ func main() {
 	// }
 
 	//读取到buffer
-	buf := make([]byte, 20)
+	buf := make([]byte, 512)
 	//如果服务端没有把数据传递过来，那么客户端阻塞，直到服务端向其中写入了数据。
 	l, _ := conn.Read(buf)
 	fmt.Println(buf)
@@ -80,52 +70,4 @@ func main() {
 	var resp prt.LoginResp
 	proto.Unmarshal(data, &resp)
 	fmt.Printf("%#v", resp)
-}
-func Uint322Byte(data uint32) (ret []byte) {
-	var len uintptr = unsafe.Sizeof(data)
-	ret = make([]byte, len)
-	var tmp uint32 = 0xff
-	var index uint = 0
-	for index = 0; index < uint(len); index++ {
-		ret[index] = byte((tmp << (index * 4) & data) >> (index * 4))
-	}
-	return ret
-}
-
-func BytesCombine(pBytes ...[]byte) []byte {
-	len := len(pBytes)
-	s := make([][]byte, len)
-	for index := 0; index < len; index++ {
-		s[index] = pBytes[index]
-	}
-	sep := []byte("")
-	return bytes.Join(s, sep)
-}
-
-func Float32ToByte(float float32) []byte {
-	bits := math.Float32bits(float)
-	bytes := make([]byte, 4)
-	binary.LittleEndian.PutUint32(bytes, bits)
-
-	return bytes
-}
-
-func ByteToFloat32(bytes []byte) float32 {
-	bits := binary.LittleEndian.Uint32(bytes)
-
-	return math.Float32frombits(bits)
-}
-
-func Float64ToByte(float float64) []byte {
-	bits := math.Float64bits(float)
-	bytes := make([]byte, 8)
-	binary.LittleEndian.PutUint64(bytes, bits)
-
-	return bytes
-}
-
-func ByteToFloat64(bytes []byte) float64 {
-	bits := binary.LittleEndian.Uint64(bytes)
-
-	return math.Float64frombits(bits)
 }

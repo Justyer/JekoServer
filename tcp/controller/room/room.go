@@ -11,89 +11,89 @@ import (
 	"github.com/Justyer/JekoServer/tcp/service/room"
 )
 
-// 查询房间列表
-func QueryRoomListController(c *jie.Context) {
+// QueryRoomList : 查询房间列表
+func QueryRoomList(c *jie.Context) {
 	var req prt.QueryRoomListReq
 	if err := c.BindProtoReq(&req); err != nil {
-		log.Err("[QueryRoomListController bind_req_err]: %s", err.Error())
+		log.Err("[QueryRoomList bind_req_err]: %s", err.Error())
 		return
 	}
-	log.Tx("[QueryRoomListController req]: %s", req.String())
+	log.Tx("[QueryRoomList req]: %s", req.String())
 
 	svc := room.NewRoomService(c)
-	room_list := svc.QueryRoomList()
+	roomList := svc.QueryRoomList()
 
 	var resp prt.QueryRoomListResp
 	resp.Code = 0
-	resp.RoomList = room_list
-	data_b, err := c.PackProtoResp(&resp)
+	resp.RoomList = roomList
+	dataB, err := c.PackProtoResp(&resp)
 	if err != nil {
-		log.Err("[QueryRoomListController pack_resp_err]: %s", err.Error())
+		log.Err("[QueryRoomList pack_resp_err]: %s", err.Error())
 		return
 	}
-	log.Tx("[QueryRoomListController resp]: %s", resp.String())
+	log.Tx("[QueryRoomList resp]: %s", resp.String())
 
-	final_b := svc.PackProtocol(uint16(prt.MsgCmd_value["Room_QueryListResp"]), data_b)
+	finalB := svc.PackProtocol(uint16(prt.MsgCmd_value["Room_QueryListResp"]), dataB)
 
-	c.Send(final_b)
+	c.Send(finalB)
 }
 
-// 进入房间
-func GetInController(c *jie.Context) {
+// GetIn : 进入房间
+func GetIn(c *jie.Context) {
 	var req prt.GetInRoomReq
 	if err := c.BindProtoReq(&req); err != nil {
-		log.Err("[GetInController bind_req_err]: %s", err.Error())
+		log.Err("[GetIn bind_req_err]: %s", err.Error())
 		return
 	}
-	log.Tx("[GetInController req]: %s", req.String())
+	log.Tx("[GetIn req]: %s", req.String())
 
 	svc := room.NewRoomService(c)
-	room_info, err := svc.GetIn(req.ID)
+	roomInfo, err := svc.GetIn(req.ID)
 
 	var resp prt.GetInRoomResp
 	if err != nil {
 		resp.Code = 1
 	}
 	c.Put("room_id", req.ID)
-	resp.Room = room_info
-	data_byte, err := c.PackProtoResp(&resp)
+	resp.Room = roomInfo
+	dataB, err := c.PackProtoResp(&resp)
 	if err != nil {
-		log.Err("[GetInController pack_resp_err]: %s", err.Error())
+		log.Err("[GetIn pack_resp_err]: %s", err.Error())
 		return
 	}
-	log.Tx("[GetInController resp]: %s", resp.String())
+	log.Tx("[GetIn resp]: %s", resp.String())
 
-	final_b := svc.PackProtocol(uint16(prt.MsgCmd_value["Room_GetInResp"]), data_byte)
+	finalB := svc.PackProtocol(uint16(prt.MsgCmd_value["Room_GetInResp"]), dataB)
 
 	conns := svc.GetAllConnInRoom(req.ID)
-	c.Broadcast(final_b, conns)
+	c.Broadcast(finalB, conns)
 
-	if len(room_info.UserList) >= world.MaxRoom {
+	if len(roomInfo.UserList) >= world.MaxRoom {
 		c.Redirect(uint16(prt.MsgType_value["Room"]), uint16(prt.MsgCmd_value["Room_EnterReadyReq"]))
 	}
 }
 
-// 进入准备阶段
-func EnterReadyController(c *jie.Context) {
-	log.Tx("[EnterReadyController req]: %s", "")
+// EnterReady : 进入准备阶段
+func EnterReady(c *jie.Context) {
+	log.Tx("[EnterReady req]: %s", "")
 
 	svc := room.NewRoomService(c)
-	room_id := svc.GetRoomID()
+	roomID := svc.GetRoomID()
 
 	var resp prt.EnterReadyResp
 	resp.Code = 0
-	data_byte, err := c.PackProtoResp(&resp)
+	dataB, err := c.PackProtoResp(&resp)
 	if err != nil {
-		log.Err("[EnterReadyController pack_resp_err]: %s", err.Error())
+		log.Err("[EnterReady pack_resp_err]: %s", err.Error())
 		return
 	}
-	log.Tx("[EnterReadyController resp]: %s", resp.String())
+	log.Tx("[EnterReady resp]: %s", resp.String())
 
-	final_b := svc.PackProtocol(uint16(prt.MsgCmd_value["Room_EnterReadyResp"]), data_byte)
+	finalB := svc.PackProtocol(uint16(prt.MsgCmd_value["Room_EnterReadyResp"]), dataB)
 
 	// 所有人都进入房间后，2秒后进入准备界面
 	time.AfterFunc(2*time.Second, func() {
-		conns := svc.GetAllConnInRoom(room_id)
-		c.Broadcast(final_b, conns)
+		conns := svc.GetAllConnInRoom(roomID)
+		c.Broadcast(finalB, conns)
 	})
 }

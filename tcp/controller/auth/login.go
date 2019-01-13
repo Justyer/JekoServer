@@ -8,13 +8,14 @@ import (
 	"github.com/Justyer/jie"
 )
 
-func LoginController(c *jie.Context) {
+// Login : 登录
+func Login(c *jie.Context) {
 	var req prt.LoginReq
 	if err := c.BindProtoReq(&req); err != nil {
-		log.Err("[LoginController bind_req_err]: %s", err.Error())
+		log.Err("[Login bind_req_err]: %s", err.Error())
 		return
 	}
-	log.Tx("[LoginController req]: %s", req.String())
+	log.Tx("[Login req]: %s", req.String())
 
 	svc := auth.NewLoginService(c)
 	user, err := svc.LoginByUser(req.UserName, req.PassWord)
@@ -25,15 +26,15 @@ func LoginController(c *jie.Context) {
 	}
 	resp.UserID = user.UserID
 	resp.UserName = user.UserName
-	data_byte, err := c.PackProtoResp(&resp)
+	dataB, err := c.PackProtoResp(&resp)
 	if err != nil {
-		log.Err("[LoginController pack_resp_err]: %s", err.Error())
+		log.Err("[Login pack_resp_err]: %s", err.Error())
 		return
 	}
 
-	log.Tx("[LoginController resp]: %s", resp.String())
+	log.Tx("[Login resp]: %s", resp.String())
 
-	final_byte := svc.PackProtocol(uint16(prt.MsgCmd_value["Login_LoginResp"]), data_byte)
+	finalB := svc.PackProtocol(uint16(prt.MsgCmd_value["Login_LoginResp"]), dataB)
 
-	c.Send(final_byte)
+	c.Send(finalB)
 }

@@ -2,23 +2,29 @@ package load_model
 
 import (
 	"github.com/Justyer/JekoServer/model"
+	"github.com/Justyer/lingo/db"
+	"github.com/Justyer/lingo/ip"
+	"github.com/spf13/viper"
 )
 
 func InitGlobalConfig() {
-	switch model.TaskType {
-	case "serve":
-		switch model.Flag_T_Type {
-		case "tcp":
-			cfg := NewTCPConfig()
-			cfg.LoadModel()
-		case "http":
-			cfg := NewHTTPConfig()
-			cfg.LoadModel()
-		case "all":
-			cfg_tcp := NewTCPConfig()
-			cfg_tcp.LoadModel()
-			cfg_http := NewHTTPConfig()
-			cfg_http.LoadModel()
-		}
-	}
+	initIP()
+	initDB()
+}
+
+func initIP() {
+	model.IP = ip.MustInnerIP()
+	model.HTTPPort = viper.GetString("config.http_port")
+	model.TCPPort = viper.GetString("config.tcp_port")
+}
+
+func initDB() {
+	model.JekoDB = db.Conn(db.DBInfo{
+		User:   viper.GetString("mysql.user"),
+		Pass:   viper.GetString("mysql.pass"),
+		Host:   viper.GetString("mysql.host"),
+		Port:   viper.GetInt("mysql.port"),
+		DbName: viper.GetString("mysql.db"),
+	})
+	model.JekoDB.LogMode(true)
 }

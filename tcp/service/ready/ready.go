@@ -8,24 +8,28 @@ import (
 	"github.com/Justyer/jie"
 )
 
-type readyService struct {
+// ReadyService : 准备阶段服务
+type ReadyService struct {
 	base.BaseService
 }
 
-func NewReadyService(c *jie.Context) *readyService {
-	s := &readyService{}
+// NewReadyService : 实例化
+func NewReadyService(c *jie.Context) *ReadyService {
+	s := &ReadyService{}
 	s.Ctx = c
 	return s
 }
 
-func (self *readyService) GetAllUserInRoom() []*prt.UserInfo {
-	us_x := world.JekoWorld.RoomList[self.Ctx.Get("room_id").(int32)].UserList
+// GetAllUserInRoom : 获取房间内所有用户的信息
+func (svc *ReadyService) GetAllUserInRoom() []*prt.UserInfo {
+	usX := world.JekoWorld.RoomList[svc.Ctx.Get("room_id").(int32)].UserList
 	var us []*prt.UserInfo
 
-	for _, u_x := range us_x {
+	for _, uX := range usX {
 		var u prt.UserInfo
 		var w prt.Weapon
-		w = u_x.Weapon.Weapon
+		w = uX.Weapon.Weapon
+		u = uX.UserInfo
 		u.Weapon = &w
 		us = append(us, &u)
 	}
@@ -33,13 +37,14 @@ func (self *readyService) GetAllUserInRoom() []*prt.UserInfo {
 	return us
 }
 
-func (self *readyService) AddWeaponAddr(es []*prt.WeaponExtraAttr) {
-	var es_x []*prtx.WeaponExtraAttr
+// AddWeaponAddr : 增加武器属性
+func (svc *ReadyService) AddWeaponAddr(es []*prt.WeaponExtraAttr) {
+	var esX []*prtx.WeaponExtraAttr
 	for _, e := range es {
-		var e_x prtx.WeaponExtraAttr
-		e_x.WeaponExtraAttr = *e
-		es_x = append(es_x, &e_x)
+		var eX prtx.WeaponExtraAttr
+		eX.WeaponExtraAttr = *e
+		esX = append(esX, &eX)
 	}
-	user := self.Ctx.Get("user").(prtx.UserInfo)
-	user.Weapon.WeaponExtraAttrList = es_x
+	user := svc.Ctx.Get("user").(prtx.UserInfo)
+	user.Weapon.WeaponExtraAttrList = esX
 }

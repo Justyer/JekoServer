@@ -37,5 +37,5 @@ func InitRouter(r *gin.Engine) {
 
 		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 	})
-	ver.API_v1(r.Group("v1"))
+	ver.APIV1(r.Group("v1"))
 }

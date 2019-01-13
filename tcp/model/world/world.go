@@ -8,11 +8,12 @@ import (
 )
 
 const (
-	// 房间最大人数
+	// MaxRoom : 房间最大人数
 	MaxRoom = 2
 )
 
 var (
+	// JekoWorld : 世界实例
 	JekoWorld *World
 )
 
@@ -27,27 +28,29 @@ func init() {
 	JekoWorld.RoomList = ris
 }
 
+// World : 游戏世界
 type World struct {
 	RoomList []*prtx.RoomInfo
 }
 
+// XreateWorld : 实例化
 func XreateWorld() *World {
 	return &World{}
 }
 
-// 获取房间信息
-func (self *World) GetRoomInfoByID(id int32) (*prtx.RoomInfo, error) {
-	for i := 0; i < len(self.RoomList); i++ {
-		if self.RoomList[i].ID == id {
-			return self.RoomList[i], nil
+// GetRoomInfoByID : 获取房间信息
+func (w *World) GetRoomInfoByID(id int32) (*prtx.RoomInfo, error) {
+	for i := 0; i < len(w.RoomList); i++ {
+		if w.RoomList[i].ID == id {
+			return w.RoomList[i], nil
 		}
 	}
 	return nil, errors.New("room not found")
 }
 
-// 获取房间里的用户的所有连接
-func (self *World) GetConnAtRoom(id int32) ([]net.Conn, error) {
-	ri, err := self.GetRoomInfoByID(id)
+// GetConnAtRoom : 获取房间里的用户的所有连接
+func (w *World) GetConnAtRoom(id int32) ([]net.Conn, error) {
+	ri, err := w.GetRoomInfoByID(id)
 	if err != nil {
 		return nil, errors.New("room has been disband")
 	}

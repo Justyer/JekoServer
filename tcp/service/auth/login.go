@@ -5,34 +5,38 @@ import (
 
 	"github.com/Justyer/jie"
 
-	"github.com/Justyer/JekoServer/tcp/model"
+	"github.com/Justyer/JekoServer/model"
 	prt "github.com/Justyer/JekoServer/tcp/model/proto"
 	prtx "github.com/Justyer/JekoServer/tcp/model/protox"
 	"github.com/Justyer/JekoServer/tcp/service/base"
 )
 
-type loginService struct {
+// LoginService : 登录服务
+type LoginService struct {
 	base.BaseService
 }
 
-func NewLoginService(c *jie.Context) *loginService {
-	s := &loginService{}
+// NewLoginService : 实例化
+func NewLoginService(c *jie.Context) *LoginService {
+	s := &LoginService{}
 	s.Ctx = c
 	return s
 }
 
-func (self *loginService) LoginByUser(u, p string) (prt.UserInfo, error) {
+// LoginByUser : 账号密码登录
+func (svc *LoginService) LoginByUser(u, p string) (prt.UserInfo, error) {
 	dao := prtx.NewUserDao()
 	user, err := dao.QueryUser(u, p)
-	user.Conn = self.Ctx.Link.Conn
+	user.Conn = svc.Ctx.Link.Conn
 	user.IconURL = fmt.Sprintf("http://%s:%s%s", model.IP, model.HTTPPort, user.IconURL)
-
-	self.Ctx.Put("user", user)
 
 	var w prtx.Weapon
 	w.ID = 1
 	w.SN = 2
 	user.Weapon = &w
+
+	svc.Ctx.Put("user", user)
+
 	return user.UserInfo, err
 }
 

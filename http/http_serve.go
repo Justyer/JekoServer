@@ -1,12 +1,13 @@
 package http
 
 import (
+	"fmt"
 	"log"
 	"syscall"
 	"time"
 
-	"github.com/Justyer/JekoServer/http/model"
 	"github.com/Justyer/JekoServer/http/router"
+	"github.com/Justyer/JekoServer/model"
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 )
@@ -21,7 +22,7 @@ func HTTPServe() {
 	endless.DefaultWriteTimeOut = 5 * time.Second
 	endless.DefaultMaxHeaderBytes = 1 << 20
 
-	server := endless.NewServer(model.HTTPIPort, engine)
+	server := endless.NewServer(fmt.Sprintf("%s:%s", model.IP, model.HTTPPort), engine)
 	server.BeforeBegin = func(add string) {
 		log.Printf("Actual pid is %d", syscall.Getpid())
 	}

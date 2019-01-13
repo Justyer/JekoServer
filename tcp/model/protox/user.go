@@ -3,7 +3,7 @@ package prtx
 import (
 	"net"
 
-	"github.com/Justyer/JekoServer/tcp/model"
+	"github.com/Justyer/JekoServer/model"
 	prt "github.com/Justyer/JekoServer/tcp/model/proto"
 )
 

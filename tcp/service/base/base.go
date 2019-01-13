@@ -9,32 +9,37 @@ import (
 	"github.com/Justyer/lingo/bytes"
 )
 
+// BaseService : 基础服务
 type BaseService struct {
 	Ctx *jie.Context
 }
 
+// NewBaseService : 实例化
 func NewBaseService() *BaseService {
 	return &BaseService{}
 }
 
-func (self *BaseService) PackProtocol(cmd uint16, data_b []byte) []byte {
-	p := self.Ctx.DP.(*protocol.Protocol)
+// PackProtocol : 封装数据包
+func (svc *BaseService) PackProtocol(cmd uint16, dataB []byte) []byte {
+	p := svc.Ctx.DP.(*protocol.Protocol)
 
-	type_b := bytes.ToByteForLE(p.MsgType)
-	cmd_b := bytes.ToByteForLE(cmd)
-	len_b := bytes.ToByteForLE(int32(len(data_b)))
-	final_b := bytes.Merge(type_b, cmd_b, len_b, data_b)
-	return final_b
+	typeB := bytes.ToByteForLE(p.MsgType)
+	cmdB := bytes.ToByteForLE(cmd)
+	lenB := bytes.ToByteForLE(int32(len(dataB)))
+	finalB := bytes.Merge(typeB, cmdB, lenB, dataB)
+	return finalB
 }
 
-func (self *BaseService) GetAllConnInRoom(id int32) []net.Conn {
+// GetAllConnInRoom : 获取房间内所有用户的连接
+func (svc *BaseService) GetAllConnInRoom(id int32) []net.Conn {
 	var ns []net.Conn
-	for i, _ := range world.JekoWorld.RoomList[id].UserList {
+	for i := 0; i < len(world.JekoWorld.RoomList[id].UserList); i++ {
 		ns = append(ns, world.JekoWorld.RoomList[id].UserList[i].Conn)
 	}
 	return ns
 }
 
-func (self *BaseService) GetRoomID() int32 {
-	return self.Ctx.Get("room_id").(int32)
+// GetRoomID : 根据上下文获取房间号
+func (svc *BaseService) GetRoomID() int32 {
+	return svc.Ctx.Get("room_id").(int32)
 }
