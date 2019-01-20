@@ -14,10 +14,13 @@ message UserInfo {
  	int32 AttributeNum = 5;//属性点
 }
 
-//message Player {
-//	int32 UserID = 1;
-//	Weapon Weapon = 2;
-//}
+message PlayerInit {
+	int32 UserID = 1;
+	string UserName = 2;
+	int32 heroSN = 3;
+	Vector3DTO position = 4;
+	Vector3DTO direct = 5;
+}
 
 message Weapon {
   	int32 ID = 1;
@@ -29,4 +32,9 @@ message WeaponExtraAttr {
 	int32 AttrType = 1;//0-attack 1-attackSpeed 2-crit
 	int32 Value = 2;
 	
+}
+message Vector3DTO{
+	float x = 1;
+	float y = 2;
+	float z = 3;
 }

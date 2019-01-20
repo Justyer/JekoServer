@@ -1,0 +1,57 @@
+syntax="proto3";
+package prt;
+import "model.proto";
+
+message CombatGetInfoReq {
+   
+}
+
+message CombatGetInfoResp {
+  	int32 Code = 1;
+  	repeated PlayerInit PlayerInitList = 2;
+}	
+
+message CombatHeroMoveReq {
+    Vector3DTO targetPos = 1;
+}
+
+message CombatHeroMoveResp {
+	int32 Code = 1;
+    int32 userId = 2;
+    string userName = 3;
+    Vector3DTO targetPos = 4;
+}
+
+message CombatHeroSkillReq {
+	int32 Code = 1;
+    RoomInfo Room = 2;
+
+}
+
+message CombatHeroSkillResp {
+	int32 Code = 1;
+    RoomInfo Room = 2;
+
+}
+message CombatHeroEffectReq {
+	int32 Code = 1;
+    RoomInfo Room = 2;
+
+}
+message CombatHeroEffectResp {
+	int32 Code = 1;
+    RoomInfo Room = 2;
+
+}
+message CombatHeroDeadReq {
+	int32 Code = 1;
+    RoomInfo Room = 2;
+
+}
+message CombatHeroDeadResp {
+	int32 Code = 1;
+    RoomInfo Room = 2;
+
+}
+
+//buff 待定
