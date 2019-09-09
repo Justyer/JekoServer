@@ -12,3 +12,8 @@
 *.out
 
 .DS_Store
+
+*.mp4
+*.jpg
+*.jpeg
+*.png

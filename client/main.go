@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	prt "github.com/Justyer/JekoServer/tcp/model/proto"
 	bb "github.com/Justyer/lingo/bytes"
@@ -31,8 +32,15 @@ func main() {
 	cate2_byte := bb.ToByteForLE(uint16(2))
 
 	final_byte := bb.Merge(cate1_byte, cate2_byte, len_byte, data_byte)
-	fmt.Println(cate1_byte, cate2_byte, data_len, uint32(data_len), data_byte)
-	conn.Write(final_byte)
+	// fmt.Println(cate1_byte, cate2_byte, data_len, uint32(data_len), data_byte)
+	// conn.Write(final_byte)
+
+	for {
+		fmt.Println(cate1_byte, cate2_byte, data_len, uint32(data_len), data_byte)
+		conn.Write(final_byte)
+
+		time.Sleep(10 * time.Second)
+	}
 	// conn.Write(final_byte)
 	// for {
 	// 	var x int
